@@ -24,7 +24,7 @@ class TestPreprocess(unittest.TestCase):
 
     def test_lemmatizer(self):
         for text in [
-            "queria estar corriendo",
+            "quería estar corriendo",
         ]:
             cleansed = lemmatize(text)
             self.assertGreater(len(text), len(cleansed))
