@@ -6,7 +6,7 @@ __status__ = "Prototype"
 import re, string
 
 
-whitelist = string.ascii_letters + string.digits + ' ' # for spanish: + 'ñáéíóúüÑÁÉÍÓÚÜ'
+whitelist = string.ascii_letters + string.digits + ' ' + 'ñáéíóúüÑÁÉÍÓÚÜ' # for spanish: + 'ñáéíóúüÑÁÉÍÓÚÜ'
 
 
 def clean_symbols(text):

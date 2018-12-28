@@ -5,12 +5,13 @@ __status__ = "Prototype"
 
 
 import json
+import os
 
 from nltk import pos_tag, word_tokenize
 
 
 # Load spanish lemmas dictionary
-lemmas_dict_path = 'text_preprocess/lemmas/es.json'
+lemmas_dict_path = os.path.abspath('lemmas/es.json')
 lemmas = json.load(open(lemmas_dict_path, 'r', encoding='latin-1'))
 
 
