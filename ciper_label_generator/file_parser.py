@@ -1,6 +1,6 @@
 import csv
 
-from text_preprocess import soft_clean
+from text_preprocess import soft_clean, full_clean
 
 
 def read_attributes(attributes_file_path, label="tags"):
@@ -37,10 +37,6 @@ def extract_articles(attributes, data_folder_path):
     return attributes_copy
 
 
-def normalize_text(article):
-    return soft_clean(article)
-
-
 def extract_news(attributes_file_path, data_folder_path, label="tags"):
     """
     Extract news and labels
@@ -51,4 +47,4 @@ def extract_news(attributes_file_path, data_folder_path, label="tags"):
     """
     attributes = read_attributes(attributes_file_path, label=label)
     article_data = extract_articles(attributes, data_folder_path)
-    return [[[normalize_text(label) for label in data[1]], normalize_text(data[2])] for data in article_data]
+    return [[[soft_clean(label) for label in data[1]], full_clean(data[2])] for data in article_data]

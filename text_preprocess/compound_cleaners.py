@@ -25,9 +25,8 @@ def full_clean(text):
     :return: the clean text
     :type: string
     """
-    from text_preprocess.spell_checker import fix_spelling
 
-    return clean(text, clean_cases, clean_symbols, clean_spaces, remove_stopwords, fix_spelling, lemmatize)
+    return clean(text, clean_cases, clean_symbols, clean_spaces, remove_stopwords, lemmatize)
 
 
 def soft_clean(text):
@@ -39,4 +38,4 @@ def soft_clean(text):
     :return: the clean text
     :type: string
     """
-    return clean(text, clean_spaces, clean_symbols, clean_cases,)
+    return clean(text, clean_spaces, clean_symbols, clean_cases)

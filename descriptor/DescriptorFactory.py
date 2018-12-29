@@ -20,12 +20,19 @@ class DescriptorFactory:
         Return BoW descriptors
         :return: List of bag-of-words
         """
+        #todo: implement
         return
 
-    def load_vectors(self, descriptor_name, vector_file):
+    def load_vectors(self, descriptor_name: str, vector_filepath: str):
+        """
+        Load vectors to KeyedVectors object (dict-like)
+        :param descriptor_name: Name of the descriptor
+        :param vector_filepath: Filepath to vector file in word2vec format (.vec)
+        :return: 
+        """
         print("info: starting to load {} vectors (2.2 GB) (~4 minutes)".format(descriptor_name))
         try:
-            wordvectors = KeyedVectors.load_word2vec_format(vector_file)
+            wordvectors = KeyedVectors.load_word2vec_format(vector_filepath)
             print("info: done loading")
             return wordvectors
         except IOError as e:
@@ -34,18 +41,29 @@ class DescriptorFactory:
             print("warning: skipping {} descriptor".format(descriptor_name))
             return None
 
-    def texts_to_vectors(self, wordvectors, descriptor_name):
+    def texts_to_vectors(self, wordvectors: KeyedVectors, descriptor_name: str):
+        """
+        Map each document's word to a vector contained in wordvectors
+        and then calculate a sentence vector by averaging all the vectors of the document.
+        :param wordvectors: KeyedVector object with the loaded vectors
+        :param descriptor_name: Name of the descriptor
+        :return:
+        """
         new_x = []
+        vectorized_counter = 0
+        not_vectorized_counter = 0
         for document in self.x:
             document_vectors = []
             for word in document.split(" "):
                 try:
                     document_vectors.append(wordvectors.get_vector(word))
+                    vectorized_counter += 1
                 except KeyError:
-                    print("warning: word: \"{}\" not found in {} vectors".format(word, descriptor_name))
+                    # print("warning: word: \"{}\" not found in {} vectors".format(word, descriptor_name))
+                    not_vectorized_counter += 1
                     continue
-            new_x.append(numpy.mean(document_vectors, axis=0))
-        print("info: done converting")
+            new_x.append(numpy.mean(document_vectors, axis=0))  # todo: use TF-IDF instead of simple mean and compare
+        print("info: done converting. vectorized {}; skipped {}".format(vectorized_counter, not_vectorized_counter))
         return new_x
 
     def fast_text(self):
@@ -67,8 +85,8 @@ class DescriptorFactory:
         Return word2vec skip-gram vectors
         :return: List of vectors
         """
-        descriptor_name = "FastText"
-        vector_file = fasttext_wordvector_file
+        descriptor_name = "Word2Vec"
+        vector_file = wor2vec_wordvector_file
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")
         if wordvectors:
@@ -80,8 +98,8 @@ class DescriptorFactory:
         Return glove vectors
         :return:
         """
-        descriptor_name = "FastText"
-        vector_file = fasttext_wordvector_file
+        descriptor_name = "Glove"
+        vector_file = glove_wordvector_file
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")
         if wordvectors:

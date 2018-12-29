@@ -21,7 +21,7 @@ if __name__ == '__main__':
     }
     print("info: loaded all vectors")
 
-    # get_classifier_benchmarks(new_descriptors, y)
+    # get_classifier_benchmarks(new_descriptors, y)  # todo: implement
 
     print("done")
 
