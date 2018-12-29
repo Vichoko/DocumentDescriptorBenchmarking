@@ -17,14 +17,16 @@ Do ```pip install -r requirements.txt```
 
 Need spanish pre-trained vectors which can be get [here](https://github.com/uchile-nlp/spanish-word-embeddings)
 
-#### FastText
 
-[Vector format (.vec.gz) (802 MB)](http://dcc.uchile.cl/~jperez/word-embeddings/fasttext-sbwc.vec.gz)
+Also, the needed vectors are displayed below:
+#### FastText (SBWC)
 
-#### Glove
+* [Vector format (.vec.gz) (802 MB)](http://dcc.uchile.cl/~jperez/word-embeddings/fasttext-sbwc.vec.gz)
 
-[Vector format (.vec.gz) (906 MB)](http://dcc.uchile.cl/~jperez/word-embeddings/glove-sbwc.i25.vec.gz)
+#### Glove (SBWC)
 
-#### Word2Vec
+* [Vector format (.vec.gz) (906 MB)](http://dcc.uchile.cl/~jperez/word-embeddings/glove-sbwc.i25.vec.gz)
 
-[Vector format (.txt.bz2)](http://cs.famaf.unc.edu.ar/~ccardellino/SBWCE/SBW-vectors-300-min5.txt.bz2)
+#### Word2Vec (SBWC)
+
+* [Vector format (.txt.bz2)](http://cs.famaf.unc.edu.ar/~ccardellino/SBWCE/SBW-vectors-300-min5.txt.bz2)
