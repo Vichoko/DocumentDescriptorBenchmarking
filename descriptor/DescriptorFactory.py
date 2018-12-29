@@ -66,7 +66,7 @@ class DescriptorFactory:
         print("info: done converting. vectorized {}; skipped {}".format(vectorized_counter, not_vectorized_counter))
         return new_x
 
-    def fast_text(self):
+    def fasttext(self):
         """
         Retrun fastText descriptors.
         fastText vectors are loaded and then freed to optimize memory.

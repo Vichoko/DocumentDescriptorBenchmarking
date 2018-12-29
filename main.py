@@ -1,4 +1,5 @@
 from ciper_label_generator.file_parser import extract_news
+from classification.Tools import get_classifier_benchmarks
 from descriptor.DescriptorFactory import DescriptorFactory
 from labeler.LabelFactory import LabelFactory
 
@@ -14,14 +15,17 @@ if __name__ == '__main__':
     descriptor = DescriptorFactory(x)
 
     y = labeler.binary_label()
-    new_descriptors = {
-        **descriptor.fast_text(),
-        **descriptor.glove(),
-        **descriptor.word2vec()
-    }
-    print("info: loaded all vectors")
+    for model_name, x in descriptor.fasttext().items():
+        get_classifier_benchmarks(x, y, model_name)
 
-    # get_classifier_benchmarks(new_descriptors, y)  # todo: implement
+    for model_name, x in descriptor.glove().items():
+        get_classifier_benchmarks(x, y, model_name)
+
+    for model_name, x in descriptor.word2vec().items():
+        get_classifier_benchmarks(x, y, model_name)
+
+
+
 
     print("done")
 
