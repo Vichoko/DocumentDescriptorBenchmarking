@@ -15,17 +15,26 @@ if __name__ == '__main__':
     descriptor = DescriptorFactory(x)
 
     y = labeler.binary_label()
-    for model_name, x in descriptor.fasttext().items():
-        get_classifier_benchmarks(x, y, model_name)
+    best_models = {}
+    descriptor_methods = [descriptor.fasttext, descriptor.word2vec, descriptor.glove]
 
-    for model_name, x in descriptor.glove().items():
-        get_classifier_benchmarks(x, y, model_name)
+    for descriptor_method in descriptor_methods:
+        for descriptor_name, x in descriptor_method().items():
+            metrics = get_classifier_benchmarks(x, y, descriptor_name)
+            baseline_0 = metrics["Base"]
+            print(baseline_0)
 
-    for model_name, x in descriptor.word2vec().items():
-        get_classifier_benchmarks(x, y, model_name)
+            # find best model
+            best_f1 = 0
+            best_clf = "Base"
+            for classificator_name, clf_metrics in metrics.items():
+                if clf_metrics["educacion"]['f1'] > best_f1:
+                    best_f1 = clf_metrics["educacion"]['f1']
+                    best_clf = classificator_name
+            best_models[descriptor_name] = metrics[best_clf]
+            best_models[descriptor_name]['best clf'] = best_clf
 
-
-
-
+    columns = ["Document Descriptor", "Best Classificator", "Class", "Precision", "Recall", "F1-Score", "Support"]
+    print(best_models)
     print("done")
 
