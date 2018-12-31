@@ -1,5 +1,6 @@
 import numpy
 from gensim.models import KeyedVectors
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 fasttext_wordvector_file = './descriptor/vectors/fasttext-sbwc.3.6.e20.vec'
 glove_wordvector_file = './descriptor/vectors/glove-sbwc.i25.vec'
@@ -20,8 +21,16 @@ class DescriptorFactory:
         Return BoW descriptors
         :return: List of bag-of-words
         """
-        #todo: implement
-        return
+        vectorizer = CountVectorizer()
+        return vectorizer.fit_transform(self.x)
+
+    def tf_idf(self):
+        """
+        Return tf-idf descriptors
+        :return: List of tf-idf
+        """
+        vectorizer = TfidfVectorizer()
+        return vectorizer.fit_transform(self.x)
 
     def load_vectors(self, descriptor_name: str, vector_filepath: str):
         """
