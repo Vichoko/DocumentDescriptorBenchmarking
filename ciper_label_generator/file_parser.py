@@ -1,4 +1,5 @@
 import csv
+import pickle
 
 from text_preprocess import soft_clean, full_clean
 
@@ -46,6 +47,11 @@ def extract_news(attributes_file_path, data_folder_path, label="tags"):
     :return: List of tuples which contains each list of labels and the corresponding text
     """
     print("info: loading news")
-    attributes = read_attributes(attributes_file_path, label=label)
-    article_data = extract_articles(attributes, data_folder_path)
-    return [[[soft_clean(label) for label in data[1]], full_clean(data[2])] for data in article_data]
+    try:
+        ret = pickle.load(open("./cache/news.pickle", 'rb'))
+    except IOError:
+        attributes = read_attributes(attributes_file_path, label=label)
+        article_data = extract_articles(attributes, data_folder_path)
+        ret = [[[soft_clean(label) for label in data[1]], full_clean(data[2])] for data in article_data]
+        pickle.dump(ret, open("./cache/news.pickle", 'wb'))
+    return ret

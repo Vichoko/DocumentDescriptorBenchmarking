@@ -2,6 +2,7 @@ import pickle
 
 import numpy
 from gensim.models import KeyedVectors
+from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 fasttext_wordvector_file = './descriptor/vectors/fasttext-sbwc.3.6.e20.vec'
@@ -24,7 +25,10 @@ class DescriptorFactory:
         :return: List of bag-of-words
         """
         vectorizer = CountVectorizer()
-        return {'bag_of_words': vectorizer.fit_transform(self.x).toarray()}
+        x = vectorizer.fit_transform(self.x).toarray()
+        pca = PCA()
+        x = pca.fit_transform(x)
+        return {'Bag of Words': x}
 
     def tf_idf(self):
         """
@@ -32,7 +36,10 @@ class DescriptorFactory:
         :return: List of tf-idf
         """
         vectorizer = TfidfVectorizer()
-        return {'tf-idf': vectorizer.fit_transform(self.x).toarray()}
+        x = vectorizer.fit_transform(self.x).toarray()
+        pca = PCA()
+        x = pca.fit_transform(x)
+        return {'TF-IDF': x}
 
     def load_vectors(self, descriptor_name: str, vector_filepath: str):
         """

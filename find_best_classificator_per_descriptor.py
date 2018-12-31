@@ -34,7 +34,6 @@ if __name__ == '__main__':
             best_models[descriptor_name] = metrics[best_clf]
             best_models[descriptor_name]['best clf'] = best_clf
 
-    columns = ["Document Descriptor", "Best Classificator", "Class", "Precision", "Recall", "F1-Score", "Support"]
     print(best_models)
     print("done")
 

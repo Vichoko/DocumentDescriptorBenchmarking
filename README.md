@@ -30,3 +30,17 @@ Also, the needed vectors are displayed below:
 #### Word2Vec (SBWC)
 
 * [Vector format (.txt.bz2)](http://cs.famaf.unc.edu.ar/~ccardellino/SBWCE/SBW-vectors-300-min5.txt.bz2)
+
+## Usage
+
+### Find best classificator per descriptor
+
+This module try every descriptor in ```DescriptorFactory```, 
+with many binary classifier models
+and return the metrics of the best classifier in the Binary Classification task 
+for each descriptor.
+
+1. Execute ```python ./find_best_classificator_per_descriptor.py```}
+2. Wait to finish
+3. Read best metrics per descriptor in ```stdout```
+
