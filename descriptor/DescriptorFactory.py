@@ -1,3 +1,5 @@
+import pickle
+
 import numpy
 from gensim.models import KeyedVectors
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -41,14 +43,24 @@ class DescriptorFactory:
         """
         print("info: starting to load {} vectors (2.2 GB) (~4 minutes)".format(descriptor_name))
         try:
-            wordvectors = KeyedVectors.load_word2vec_format(vector_filepath)
-            print("info: done loading")
+            # try to load from cache
+            print("info: trying to load from cache")
+            wordvectors = pickle.load(open("./cache/{}.pickle".format(descriptor_name), "rb"))
+            print("info: loaded from cache")
             return wordvectors
-        except IOError as e:
-            print("error: exception raised while loading {}".format(descriptor_name))
-            print(str(e))
-            print("warning: skipping {} descriptor".format(descriptor_name))
-            return None
+        except IOError:
+            # if couldnt load from cachee
+            print("info: cache not found. Loading from .vec...")
+            try:
+                wordvectors = KeyedVectors.load_word2vec_format(vector_filepath)
+                print("info: done loading")
+                pickle.dump(wordvectors, open("./cache/{}.pickle".format(descriptor_name), 'wb'))
+                return wordvectors
+            except IOError as e:
+                print("error: exception raised while loading {}".format(descriptor_name))
+                print(str(e))
+                print("warning: skipping {} descriptor".format(descriptor_name))
+                return None
 
     def texts_to_vectors(self, wordvectors: KeyedVectors, descriptor_name: str):
         """

@@ -1,10 +1,12 @@
 import numpy as np
+from sklearn.gaussian_process import GaussianProcessClassifier
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.dummy import DummyClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
@@ -19,14 +21,47 @@ def iterated_benchmark_classifier(clf, x, y, num_tests=100):
     :return: Score benchmark metrics
     """
     scores = []
+    labels = ['no-educacion', 'educacion']
     for _ in range(num_tests):
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
         clf.fit(x_train, y_train)
-        scores.append(clf.score(x_test, y_test))
-    return np.asarray(scores)
+        y_pred = clf.predict(x_test)
+        ret = classification_report(
+            y_test,
+            y_pred,
+            target_names=labels,
+            output_dict=True
+        )
+        scores.append(ret)
+
+    precision = [[] for _ in labels]
+    recall = [[] for _ in labels]
+    f1 = [[] for _ in labels]
+    support = [[] for _ in labels]
+    for score in scores:
+        for idx, label in enumerate(labels):
+            precision[idx].append(score[label]['precision'])
+            recall[idx].append(score[label]['recall'])
+            f1[idx].append(score[label]['f1-score'])
+            support[idx].append(score[label]['support'])
+
+    mean_precision = np.mean(precision, axis=1)
+    mean_recall = np.mean(recall, axis=1)
+    mean_f1 = np.mean(f1, axis=1)
+    mean_support = np.mean(support, axis=1)
+
+    dic = {}
+    for idx, label in enumerate(labels):
+        dic[label] =  {
+            'precision': mean_precision[idx],
+            'recall': mean_recall[idx],
+            'f1': mean_f1[idx],
+            'support': mean_support[idx]
+        }
+    return dic
 
 
-def benchmark_classifier(clf, x,y):
+def benchmark_classifier(clf, x, y):
     """
     Fit and predict for metrics.
     :param clf: Classifier instance
@@ -36,7 +71,14 @@ def benchmark_classifier(clf, x,y):
     """
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
     clf.fit(x_train, y_train)
-    return classification_report(y_test, clf.predict(x_test))
+    y_pred = clf.predict(x_test)
+    ret = classification_report(
+        y_test,
+        y_pred,
+        target_names=["no-educacion", "educacion"],
+        output_dict=True
+    )
+    return ret
 
 
 def get_classifier_benchmarks(x, y, model_name):
@@ -45,10 +87,14 @@ def get_classifier_benchmarks(x, y, model_name):
         ("SVM", SVC(kernel='linear')),
         ("DT", DecisionTreeClassifier()),
         ("NB", GaussianNB()),
-        ("KNN", KNeighborsClassifier(n_neighbors=5))
+        ("KNN", KNeighborsClassifier(n_neighbors=5)),
+        #("GP", GaussianProcessClassifier()),
+        #("MLP", MLPClassifier())
     ]
-    print("info: benchmarking descriptor model: {} with many classifiers".format(model_name))
+    iter = 100
+    print("info: benchmarking descriptor model: {} with {} classifiers".format(model_name, len(classifiers)))
+    metrics = {}
     for name, clf in classifiers:
-        print("Classifier: {}".format(name))
-        metrics = benchmark_classifier(clf, x, y)
-        print(metrics)
+        print("info: benchmarking {}".format(name))
+        metrics[name] = iterated_benchmark_classifier(clf, x, y)
+    return metrics

@@ -45,6 +45,7 @@ def extract_news(attributes_file_path, data_folder_path, label="tags"):
     :param label: can be "tags" or "author" within the news
     :return: List of tuples which contains each list of labels and the corresponding text
     """
+    print("info: loading news")
     attributes = read_attributes(attributes_file_path, label=label)
     article_data = extract_articles(attributes, data_folder_path)
     return [[[soft_clean(label) for label in data[1]], full_clean(data[2])] for data in article_data]
