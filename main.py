@@ -15,6 +15,13 @@ if __name__ == '__main__':
     descriptor = DescriptorFactory(x)
 
     y = labeler.binary_label()
+
+    for model_name, x in descriptor.bag_of_words().items():
+        get_classifier_benchmarks(x, y, model_name)
+
+    for model_name, x in descriptor.tf_idf().items():
+        get_classifier_benchmarks(x, y, model_name)
+
     for model_name, x in descriptor.fasttext().items():
         get_classifier_benchmarks(x, y, model_name)
 
@@ -23,9 +30,6 @@ if __name__ == '__main__':
 
     for model_name, x in descriptor.word2vec().items():
         get_classifier_benchmarks(x, y, model_name)
-
-
-
 
     print("done")
 

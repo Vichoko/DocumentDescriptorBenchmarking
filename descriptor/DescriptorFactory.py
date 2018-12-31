@@ -22,7 +22,7 @@ class DescriptorFactory:
         :return: List of bag-of-words
         """
         vectorizer = CountVectorizer()
-        return vectorizer.fit_transform(self.x)
+        return {'bag_of_words': vectorizer.fit_transform(self.x).toarray()}
 
     def tf_idf(self):
         """
@@ -30,7 +30,7 @@ class DescriptorFactory:
         :return: List of tf-idf
         """
         vectorizer = TfidfVectorizer()
-        return vectorizer.fit_transform(self.x)
+        return {'tf-idf': vectorizer.fit_transform(self.x).toarray()}
 
     def load_vectors(self, descriptor_name: str, vector_filepath: str):
         """
