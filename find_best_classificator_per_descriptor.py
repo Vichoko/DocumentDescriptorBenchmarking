@@ -17,8 +17,8 @@ if __name__ == '__main__':
     y = labeler.binary_label()
     best_models = {}
     descriptor_methods = [
-        # descriptor.bag_of_words,
-        # descriptor.tf_idf,
+        descriptor.bag_of_words,
+        descriptor.tf_idf,
         descriptor.fasttext,
         descriptor.word2vec,
         descriptor.glove,
@@ -26,7 +26,7 @@ if __name__ == '__main__':
         # descriptor.word2vec_idf,
         # descriptor.glove_idf,
     ]
-    print("info: starting classificator benchmarking")
+    print("info: starting classificator benchmarking (prepare for hours of proccessing)")
     for descriptor_method in descriptor_methods:
         for descriptor_name, x in descriptor_method().items():
             metrics = get_classifier_benchmarks(x, y, descriptor_name)
