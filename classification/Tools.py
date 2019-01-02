@@ -52,7 +52,7 @@ def iterated_benchmark_classifier(clf, x, y, num_tests=100, test_size=0.3):
 
     dic = {}
     for idx, label in enumerate(labels):
-        dic[label] =  {
+        dic[label] = {
             'precision': mean_precision[idx],
             'recall': mean_recall[idx],
             'f1': mean_f1[idx],
@@ -89,10 +89,11 @@ def get_classifier_benchmarks(x, y, model_name):
         ("NB", GaussianNB()),
         ("KNN", KNeighborsClassifier(n_neighbors=5)),
         ("GP", GaussianProcessClassifier()),
-        ("MLP", MLPClassifier())
+        #        ("MLP", MLPClassifier())  # sometimes it doesn't converge
     ]
     iter = 300
-    print("info: benchmarking descriptor model: {} with {} classifiers {} iterations".format(model_name, len(classifiers), iter))
+    print("info: benchmarking descriptor model: {} with {} classifiers with {} train-predict iterations each".format(
+        model_name, len(classifiers), iter))
     metrics = {}
     for name, clf in classifiers:
         print("info: benchmarking {}".format(name))

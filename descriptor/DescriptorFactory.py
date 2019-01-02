@@ -73,7 +73,7 @@ class DescriptorFactory:
                 print("warning: skipping {} descriptor".format(descriptor_name))
                 return None
 
-    def texts_to_vectors(self, wordvectors: KeyedVectors, descriptor_name: str):
+    def texts_to_vectors(self, wordvectors: KeyedVectors, descriptor_name: str, use_idf=True):
         """
         Map each document's word to a vector contained in wordvectors
         and then calculate a sentence vector by averaging all the vectors of the document.
@@ -95,11 +95,14 @@ class DescriptorFactory:
             for word in document.split(" "):
                 try:
                     vector = wordvectors.get_vector(word)
-                    try:
-                        idf = self.tfidf.idfs[self.dct.token2id[word]]
-                    except KeyError as e:
-                        print("warning: idf not found for {}".format(word))
-                        continue
+                    if use_idf:
+                        try:
+                            idf = self.tfidf.idfs[self.dct.token2id[word]]
+                        except KeyError as e:
+                            print("warning: idf not found for {}".format(word))
+                            continue
+                    else:
+                        idf = 1  # simple mean
                     if document_vector_accum is None:
                         document_vector_accum = vector*idf
                     else:
