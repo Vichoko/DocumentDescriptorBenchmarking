@@ -1,7 +1,9 @@
 import pickle
+from math import log
 
 import numpy
-from gensim.models import KeyedVectors
+from gensim.corpora import Dictionary
+from gensim.models import KeyedVectors, TfidfModel
 from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
@@ -18,6 +20,8 @@ class DescriptorFactory:
         :param x: List of documents (strings)
         """
         self.x = x
+        self.tfidf = None
+        self.dct = None
 
     def bag_of_words(self):
         """
@@ -77,20 +81,37 @@ class DescriptorFactory:
         :param descriptor_name: Name of the descriptor
         :return:
         """
+        if self.dct is None:
+            self.dct = Dictionary([x.split(" ") for x in self.x])
+        if self.tfidf is None:
+            self.tfidf = TfidfModel([self.dct.doc2bow(document.split(" ")) for document in self.x])
+
         new_x = []
         vectorized_counter = 0
         not_vectorized_counter = 0
         for document in self.x:
-            document_vectors = []
+            document_vector_accum = None
+            weight_accum = 0
             for word in document.split(" "):
                 try:
-                    document_vectors.append(wordvectors.get_vector(word))
+                    vector = wordvectors.get_vector(word)
+                    try:
+                        idf = self.tfidf.idfs[self.dct.token2id[word]]
+                    except KeyError as e:
+                        print("warning: idf not found for {}".format(word))
+                        continue
+                    if document_vector_accum is None:
+                        document_vector_accum = vector*idf
+                    else:
+                        document_vector_accum += vector*idf
+                    weight_accum += idf
                     vectorized_counter += 1
                 except KeyError:
                     # print("warning: word: \"{}\" not found in {} vectors".format(word, descriptor_name))
                     not_vectorized_counter += 1
                     continue
-            new_x.append(numpy.mean(document_vectors, axis=0))  # todo: use TF-IDF instead of simple mean and compare
+            document_vector_accum = document_vector_accum / weight_accum
+            new_x.append(document_vector_accum)
         print("info: done converting. vectorized {}; skipped {}".format(vectorized_counter, not_vectorized_counter))
         return new_x
 

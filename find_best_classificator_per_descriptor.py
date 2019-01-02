@@ -16,13 +16,17 @@ if __name__ == '__main__':
 
     y = labeler.binary_label()
     best_models = {}
-    descriptor_methods = [descriptor.fasttext, descriptor.word2vec, descriptor.glove]
-
+    descriptor_methods = [
+        descriptor.bag_of_words,
+        descriptor.tf_idf,
+        descriptor.fasttext,
+        descriptor.word2vec,
+        descriptor.glove
+    ]
+    print("info: starting classificator benchmarking")
     for descriptor_method in descriptor_methods:
         for descriptor_name, x in descriptor_method().items():
             metrics = get_classifier_benchmarks(x, y, descriptor_name)
-            baseline_0 = metrics["Base"]
-            print(baseline_0)
 
             # find best model
             best_f1 = 0
@@ -33,7 +37,6 @@ if __name__ == '__main__':
                     best_clf = classificator_name
             best_models[descriptor_name] = metrics[best_clf]
             best_models[descriptor_name]['best clf'] = best_clf
-
+            print(best_models[descriptor_name])
     print(best_models)
     print("done")
-

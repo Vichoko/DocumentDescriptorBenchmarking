@@ -30,7 +30,7 @@ class LabelFactory:
             else:
                 self.binary_labels.append(0)
                 self.negative_count += 1
-        print("Binary Label stats: Positives {}, Negatives {}".format(self.positive_count, self.negative_count))
+        print("info: binary Label stats: Positives {}, Negatives {}".format(self.positive_count, self.negative_count))
         return self.binary_labels
 
     def top_labels(self, count=10):

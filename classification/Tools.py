@@ -11,7 +11,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 
-def iterated_benchmark_classifier(clf, x, y, num_tests=100):
+def iterated_benchmark_classifier(clf, x, y, num_tests=100, test_size=0.3):
     """
     Fit and Predict score num_test times to get signifiacant metrics
     :param clf: Classifier instance
@@ -23,7 +23,7 @@ def iterated_benchmark_classifier(clf, x, y, num_tests=100):
     scores = []
     labels = ['no-educacion', 'educacion']
     for _ in range(num_tests):
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size)
         clf.fit(x_train, y_train)
         y_pred = clf.predict(x_test)
         ret = classification_report(
@@ -88,13 +88,13 @@ def get_classifier_benchmarks(x, y, model_name):
         ("DT", DecisionTreeClassifier()),
         ("NB", GaussianNB()),
         ("KNN", KNeighborsClassifier(n_neighbors=5)),
-        #("GP", GaussianProcessClassifier()),
-        #("MLP", MLPClassifier())
+        ("GP", GaussianProcessClassifier()),
+        ("MLP", MLPClassifier())
     ]
-    iter = 100
-    print("info: benchmarking descriptor model: {} with {} classifiers".format(model_name, len(classifiers)))
+    iter = 300
+    print("info: benchmarking descriptor model: {} with {} classifiers {} iterations".format(model_name, len(classifiers), iter))
     metrics = {}
     for name, clf in classifiers:
         print("info: benchmarking {}".format(name))
-        metrics[name] = iterated_benchmark_classifier(clf, x, y)
+        metrics[name] = iterated_benchmark_classifier(clf, x, y, num_tests=iter, test_size=0.2)
     return metrics
