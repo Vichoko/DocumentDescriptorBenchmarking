@@ -73,7 +73,7 @@ class DescriptorFactory:
                 print("warning: skipping {} descriptor".format(descriptor_name))
                 return None
 
-    def texts_to_vectors(self, wordvectors: KeyedVectors, descriptor_name: str, use_idf=True):
+    def texts_to_vectors(self, wordvectors: KeyedVectors, descriptor_name: str, use_idf=False):
         """
         Map each document's word to a vector contained in wordvectors
         and then calculate a sentence vector by averaging all the vectors of the document.
@@ -81,10 +81,11 @@ class DescriptorFactory:
         :param descriptor_name: Name of the descriptor
         :return:
         """
-        if self.dct is None:
-            self.dct = Dictionary([x.split(" ") for x in self.x])
-        if self.tfidf is None:
-            self.tfidf = TfidfModel([self.dct.doc2bow(document.split(" ")) for document in self.x])
+        if use_idf:
+            if self.dct is None:
+                self.dct = Dictionary([x.split(" ") for x in self.x])
+            if self.tfidf is None:
+                self.tfidf = TfidfModel([self.dct.doc2bow(document.split(" ")) for document in self.x])
 
         new_x = []
         vectorized_counter = 0
@@ -129,8 +130,21 @@ class DescriptorFactory:
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")
         if wordvectors:
-            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name)}
+            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name, use_idf=False)}
         return {}
+
+    def fasttext_idf(self):
+        """
+        Retrun fastText descriptors.
+        fastText vectors are loaded and then freed to optimize memory.
+        :return: List of vectors
+        """
+        descriptor_name = "FastText"
+        vector_file = fasttext_wordvector_file
+        wordvectors = self.load_vectors(descriptor_name, vector_file)
+        print("info: starting converting texts")
+        if wordvectors:
+            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name, use_idf=True)}
 
     def word2vec(self):
         """
@@ -142,7 +156,20 @@ class DescriptorFactory:
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")
         if wordvectors:
-            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name)}
+            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name, use_idf=False)}
+        return {}
+
+    def word2vec_idf(self):
+        """
+        Return word2vec skip-gram vectors
+        :return: List of vectors
+        """
+        descriptor_name = "Word2Vec"
+        vector_file = wor2vec_wordvector_file
+        wordvectors = self.load_vectors(descriptor_name, vector_file)
+        print("info: starting converting texts")
+        if wordvectors:
+            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name, use_idf=True)}
         return {}
 
     def glove(self):
@@ -155,7 +182,20 @@ class DescriptorFactory:
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")
         if wordvectors:
-            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name)}
+            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name, use_idf=False)}
+        return {}
+
+    def glove_idf(self):
+        """
+        Return glove vectors
+        :return:
+        """
+        descriptor_name = "Glove"
+        vector_file = glove_wordvector_file
+        wordvectors = self.load_vectors(descriptor_name, vector_file)
+        print("info: starting converting texts")
+        if wordvectors:
+            return {descriptor_name: self.texts_to_vectors(wordvectors, descriptor_name, use_idf=True)}
         return {}
 
 

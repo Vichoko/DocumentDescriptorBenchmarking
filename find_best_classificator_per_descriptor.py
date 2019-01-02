@@ -1,5 +1,5 @@
 from ciper_label_generator.file_parser import extract_news
-from classification.Tools import get_classifier_benchmarks
+from classification.Benchmark import get_classifier_benchmarks
 from descriptor.DescriptorFactory import DescriptorFactory
 from labeler.LabelFactory import LabelFactory
 
@@ -17,11 +17,14 @@ if __name__ == '__main__':
     y = labeler.binary_label()
     best_models = {}
     descriptor_methods = [
-        descriptor.bag_of_words,
-        descriptor.tf_idf,
+        # descriptor.bag_of_words,
+        # descriptor.tf_idf,
         descriptor.fasttext,
         descriptor.word2vec,
-        descriptor.glove
+        descriptor.glove,
+        # descriptor.fasttext_idf,
+        # descriptor.word2vec_idf,
+        # descriptor.glove_idf,
     ]
     print("info: starting classificator benchmarking")
     for descriptor_method in descriptor_methods:

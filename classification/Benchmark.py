@@ -89,7 +89,7 @@ def get_classifier_benchmarks(x, y, model_name):
         ("NB", GaussianNB()),
         ("KNN", KNeighborsClassifier(n_neighbors=5)),
         ("GP", GaussianProcessClassifier()),
-        #        ("MLP", MLPClassifier())  # sometimes it doesn't converge
+        ("MLP", MLPClassifier())  # sometimes it doesn't converge
     ]
     iter = 300
     print("info: benchmarking descriptor model: {} with {} classifiers with {} train-predict iterations each".format(
