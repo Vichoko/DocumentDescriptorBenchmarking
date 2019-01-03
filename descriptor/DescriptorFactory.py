@@ -139,7 +139,7 @@ class DescriptorFactory:
         fastText vectors are loaded and then freed to optimize memory.
         :return: List of vectors
         """
-        descriptor_name = "FastText"
+        descriptor_name = "FastText-IDF"
         vector_file = fasttext_wordvector_file
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")
@@ -164,7 +164,7 @@ class DescriptorFactory:
         Return word2vec skip-gram vectors
         :return: List of vectors
         """
-        descriptor_name = "Word2Vec"
+        descriptor_name = "Word2Vec-IDF"
         vector_file = wor2vec_wordvector_file
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")
@@ -190,7 +190,7 @@ class DescriptorFactory:
         Return glove vectors
         :return:
         """
-        descriptor_name = "Glove"
+        descriptor_name = "Glove-IDF"
         vector_file = glove_wordvector_file
         wordvectors = self.load_vectors(descriptor_name, vector_file)
         print("info: starting converting texts")

@@ -17,8 +17,8 @@ if __name__ == '__main__':
     y = labeler.binary_label()
     best_models = {}
     descriptor_methods = [
-        descriptor.bag_of_words,
-        descriptor.tf_idf,
+        # descriptor.bag_of_words,
+        # descriptor.tf_idf,
         descriptor.fasttext,
         descriptor.word2vec,
         descriptor.glove,
